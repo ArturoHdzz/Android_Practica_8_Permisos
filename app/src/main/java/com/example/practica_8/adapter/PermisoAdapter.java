@@ -69,14 +69,6 @@ public class PermisoAdapter extends RecyclerView.Adapter<PermisoAdapter.PermisoV
             txtPermiso= itemView.findViewById(R.id.txtPermiso);
             txtDesc= itemView.findViewById(R.id.txtDesc);
             swPermiso= itemView.findViewById(R.id.switch1);
-
-            swPermiso.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked){
-                     pp.setEstado(true);
-                }else{
-                    pp.setEstado(false);
-                }
-            });
         }
 
         public void setData(Permiso p) {
