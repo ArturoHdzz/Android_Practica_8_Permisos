@@ -1,5 +1,8 @@
 package com.example.practica_8.adapter;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +10,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.practica_8.R;
@@ -18,13 +23,11 @@ public class PermisoAdapter extends RecyclerView.Adapter<PermisoAdapter.PermisoV
 
 
     List<Permiso> Lista_permisos;
+    Context context;
 
-    public PermisoAdapter(List<Permiso> lista_permisos) {
+    public PermisoAdapter(List<Permiso> lista_permisos, Context context) {
         Lista_permisos = lista_permisos;
-    }
-
-    public interface PermissionRequester {
-        void requestPermission(String permission);
+        this.context = context;
     }
 
     @NonNull
@@ -39,17 +42,6 @@ public class PermisoAdapter extends RecyclerView.Adapter<PermisoAdapter.PermisoV
     public void onBindViewHolder(@NonNull PermisoAdapter.PermisoViewHolder holder, int position) {
         Permiso p= Lista_permisos.get(position);
         holder.setData(p);
-
-        holder.swPermiso.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            p.setEstado(isChecked);
-            if (isChecked) {
-                if (holder.itemView.getContext() instanceof PermissionRequester) {
-                    ((PermissionRequester) holder.itemView.getContext()).requestPermission(p.getPermisos());
-                }
-            } else {
-                p.setEstado(false);
-            }
-        });
     }
 
     @Override
@@ -69,6 +61,16 @@ public class PermisoAdapter extends RecyclerView.Adapter<PermisoAdapter.PermisoV
             txtPermiso= itemView.findViewById(R.id.txtPermiso);
             txtDesc= itemView.findViewById(R.id.txtDesc);
             swPermiso= itemView.findViewById(R.id.switch1);
+
+            swPermiso.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    if (ContextCompat.checkSelfPermission(context, pp.getPermisos()) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions((Activity) context, new String[]{pp.getPermisos()}, 204);
+                    }
+                } else {
+                    pp.setEstado(false);
+                }
+            });
         }
 
         public void setData(Permiso p) {

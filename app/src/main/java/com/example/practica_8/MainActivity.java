@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.Manifest;
 
-public class MainActivity extends AppCompatActivity implements PermisoAdapter.PermissionRequester{
+public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements PermisoAdapter.Pe
         Lista_permisos.add(new Permiso("Contactos", "Permite el acceso a los contactos", Manifest.permission.READ_CONTACTS));
         Lista_permisos.add(new Permiso("Llamar", "Permite el acceso a la llamada", Manifest.permission.CALL_PHONE));
 
-        PermisoAdapter pa = new PermisoAdapter(Lista_permisos);
+        PermisoAdapter pa = new PermisoAdapter(Lista_permisos, this);
         RecyclerView rc = findViewById(R.id.rcPermisos);
         rc.setAdapter(pa);
         rc.setLayoutManager(new LinearLayoutManager(this));
@@ -36,10 +36,4 @@ public class MainActivity extends AppCompatActivity implements PermisoAdapter.Pe
 
     }
 
-    @Override
-    public void requestPermission(String permission) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, 204);
-        }
-    }
 }
